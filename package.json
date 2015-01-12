@@ -1,0 +1,14 @@
+{
+  "version": "0.0.0",
+  "private": false,
+  "name": "QuizzerAPI",
+  "description": "An ExpressJS API for Andela-Quizzer",
+  "repository": "https://github.com/andela-ladenusi/andelaQuizzer",
+  "website": "https://andela-quizzer.herokuapp.com",
+  "license": "Free",
+  "dependencies": {
+    "body-parser": "^1.10.1",
+    "express": "~4.10.0",
+    "mongoose": "^3.8.21"
+  }
+}
