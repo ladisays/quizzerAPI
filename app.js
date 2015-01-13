@@ -1,7 +1,8 @@
 var express = require('express');
 var app = express();
 
-var router = require('./routes/main');
+// var router = require('./routes/main');
+var router = require('./routes/index');
 
 app.set('port', (process.env.PORT || 3000));
 
