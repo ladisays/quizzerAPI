@@ -1,1 +1,3 @@
 node_modules
+nodeauth
+routes/index.route.js
