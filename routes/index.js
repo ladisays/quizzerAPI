@@ -1,10 +1,6 @@
-
-
 // Collections
-// var quizModel = require('../models/quizModel'); // model for the quiz collection
 var questionModel = require('../models/question'); // model for the question collection
-// var userModel = require('../models/user.model'); // model for the category collection
-var userModel          = require('../models/user');
+var userModel = require('../models/user'); // model for the user collection
 
 
 function parser(name) {
@@ -33,15 +29,12 @@ module.exports = function(router, passport) {
 
   router.route('/signup')
   .get(function (request, response) {
-    // render the page and pass in any flash data if it exists
-    // res.render('signup.ejs', { message: req.flash('signupMessage') });
     response.send('This is the signup page...Please proceed to POST!');
   })
 
   .post(passport.authenticate('local-signup', {
     successRedirect : '/profile', // redirect to the secure profile section
     failureRedirect : '/signup', // redirect back to the signup page if there is an error
-    // failureFlash : true // allow flash messages
   }));
 
 
@@ -55,14 +48,18 @@ module.exports = function(router, passport) {
   });
 
 
-  router.route('/profile')
-  .get(isLoggedIn, function (request, response) {
+  // =====================================
+  // PROFILE =============================
+  // =====================================
+
+  router.route('/profile') 
+  .get(isLoggedIn, function (request, response) { // show the current user's details
     return response.json(request.user.local);
   });
 
 
   router.route('/profile/questions')
-  .get(isLoggedIn, function (request, response) {
+  .get(isLoggedIn, function (request, response) { // show all the questions created by the current user
     var query = {user_id: request.user.id};
     questionModel.find(query, function (err, questions) {
       if(err) {
@@ -75,7 +72,7 @@ module.exports = function(router, passport) {
     });
   })
 
-  .post(isLoggedIn, function (request, response) {
+  .post(isLoggedIn, function (request, response) { // allow the current user to create a question
     if(request.body.name && request.body.tag && request.body.answer && request.body.value) {
       var query = {
         user_id: request.user.id,
@@ -98,7 +95,7 @@ module.exports = function(router, passport) {
 
 
   router.route('/profile/questions/:id')
-  .get(isLoggedIn, function (request, response) {
+  .get(isLoggedIn, function (request, response) { // find a question with its id for the current user
     if(request.params.id) {
       var query = {
         user_id: request.user.id,
@@ -117,7 +114,7 @@ module.exports = function(router, passport) {
     }
   })
 
-  .put(isLoggedIn, function (request, response) {
+  .put(isLoggedIn, function (request, response) { // update a question with its id
     if(request.params.id) {
       var query = {
         _id: request.params.id,
@@ -154,6 +151,9 @@ module.exports = function(router, passport) {
   });
 
 
+  // =====================================================
+  // TAGS ================================================
+  // =====================================================
 
   // list all tags
   router.route('/tags')
@@ -171,7 +171,7 @@ module.exports = function(router, passport) {
   });
 
 
-  // list a single tag
+  // list a single tag and its questions
   router.route('/tags/:tag')
   .get(isLoggedIn, function (request, response) {
     if(request.params.tag) {
@@ -190,7 +190,12 @@ module.exports = function(router, passport) {
   });
 
 
-  // list all questions
+
+  // ================================================
+  // QUESTIONS ======================================
+  // ================================================
+
+  // list all questions that have been created
   router.route('/questions')
   .get(isLoggedIn, function (request, response) {
     var query = {};
@@ -205,7 +210,7 @@ module.exports = function(router, passport) {
   });
 
 
-  //list a single question
+  //list a single question by its id
   router.route('/questions/:id')
   .get(isLoggedIn, function (request, response) {
     if(request.params.id) {
@@ -223,6 +228,12 @@ module.exports = function(router, passport) {
       });
     }
   });
+
+
+
+  // ======================================================
+  // USERS ================================================
+  // ======================================================
 
 
   // list all users
