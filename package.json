@@ -2,9 +2,9 @@
   "version": "0.0.0",
   "private": false,
   "name": "QuizzerAPI",
-  "description": "An ExpressJS API for Andela-Quizzer",
-  "repository": "https://github.com/andela-ladenusi/andelaQuizzer",
-  "website": "https://andela-quizzer.herokuapp.com",
+  "description": "An ExpressJS API for a Quizzer API",
+  "repository": "https://github.com/andela-ladenusi/quizzerAPI",
+  "website": "https://quizzerapi.herokuapp.com",
   "license": "Free",
   "dependencies": {
     "bcrypt-nodejs": "latest",
