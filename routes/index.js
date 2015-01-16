@@ -296,7 +296,7 @@ module.exports = function(router, passport) {
 
     // if they are, carry on
     // response.redirect('/');
-      response.sendStatus(401);
+    response.sendStatus(401);
   }
 };
 
