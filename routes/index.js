@@ -9,11 +9,11 @@ function parser(name) {
 }
 
 // configure cors
-var cors = require('cors');
+// var cors = require('cors');
 
-var corsOptions = {
-  origin: 'http://localhost:4000'
-};
+// var corsOptions = {
+//   origin: 'http://localhost:4000'
+// };
 
 module.exports = function(router, passport) {
 
@@ -35,7 +35,7 @@ module.exports = function(router, passport) {
 
 
   router.route('/loggedin')
-  .get(cors(corsOptions), function (request, response) {
+  .get(function (request, response) {
     response.send(request.isAuthenticated() ? request.user : '0');
   });
 
