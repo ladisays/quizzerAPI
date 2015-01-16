@@ -27,6 +27,12 @@ module.exports = function(router, passport) {
   }));
 
 
+  router.route('/loggedin')
+  .get(function (request, response) {
+    response.send(request.isAuthenticated() ? request.user : '0');
+  });
+
+
   router.route('/signup')
   .get(function (request, response) {
     response.send('This is the signup page...Please proceed to POST!');
@@ -282,28 +288,15 @@ module.exports = function(router, passport) {
   // route middleware to make sure a user is logged in
   function isLoggedIn(request, response, next) {
     // if user is authenticated in the session, carry on 
-    if (request.isAuthenticated())
-        return next();
+    if (request.isAuthenticated()) {
+      return next();
+    }
+    else {
 
     // if they aren't redirect them to the home page
-    response.redirect('/');
+    // response.redirect('/');
+      response.send(401);
+    }
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
