@@ -295,7 +295,7 @@ module.exports = function(router, passport) {
 
     // if they aren't redirect them to the home page
     // response.redirect('/');
-      response.send(401).redirect('/login');
+      response.status(401).redirect('/login');
     }
   }
 };
