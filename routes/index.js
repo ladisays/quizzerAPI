@@ -8,12 +8,6 @@ function parser(name) {
   return parsedName;
 }
 
-// configure cors
-// var cors = require('cors');
-
-// var corsOptions = {
-//   origin: 'http://localhost:4000'
-// };
 
 module.exports = function(router, passport) {
 
@@ -25,6 +19,7 @@ module.exports = function(router, passport) {
 
   router.route('/login')
   .get(function (request, response) {
+    console.log('Please proceed to the POST at /login');
     response.send('Please proceed to the POST at /login');
   })
 
@@ -66,8 +61,8 @@ module.exports = function(router, passport) {
   // =====================================
 
   router.route('/profile') 
-  .get(isLoggedIn, function (request, response) { // show the current user's details
-    return response.json(request.user.local);
+  .get(function (request, response) { // show the current user's details
+    return response.json(request.user);
   });
 
 
@@ -294,16 +289,14 @@ module.exports = function(router, passport) {
 
   // route middleware to make sure a user is logged in
   function isLoggedIn(request, response, next) {
-    // if user is authenticated in the session, carry on 
+    // if user isn't authenticated in the session, send a 401 
     if (request.isAuthenticated()) {
       return next();
     }
-    else {
 
-    // if they aren't redirect them to the home page
+    // if they are, carry on
     // response.redirect('/');
-      response.send(401);
-    }
+      response.sendStatus(401);
   }
 };
 
