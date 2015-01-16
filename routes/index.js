@@ -48,7 +48,7 @@ module.exports = function(router, passport) {
   // LOGOUT ==============================
   // =====================================
   router.route('/logout')
-  .get(function (request, response) {
+  .post(function (request, response) {
       request.logout();
       response.redirect('/');
   });
@@ -295,7 +295,7 @@ module.exports = function(router, passport) {
 
     // if they aren't redirect them to the home page
     // response.redirect('/');
-      response.status(401).redirect('/login');
+      response.send(401);
     }
   }
 };
