@@ -3,7 +3,7 @@
 // =============================================================================
 var express  = require('express');
 var app      = express();
-var cors     = require('cors');
+// var cors     = require('cors');
 var router   = express.Router();
 var port     = process.env.PORT || 8080;
 var mongoose = require('mongoose');
@@ -24,7 +24,7 @@ var configDB     = require('./config/database');
 
 // app.use(allowCrossDomain);
 
-app.use(cors());
+// app.use(cors());
 
 // APP CONFIGURATION ===========================================================
 mongoose.connect(configDB.url); // connect to our database
