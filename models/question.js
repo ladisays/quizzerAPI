@@ -7,7 +7,7 @@ var questionSchema = mongoose.Schema({
   tag: String,
   name: String,
   answer: String,
-  wrong_answers: [{value: String}]
+  wrongOptions: Array
 });
 
 
