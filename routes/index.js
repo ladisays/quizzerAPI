@@ -59,9 +59,9 @@ module.exports = function(router, passport) {
   });
 
 
-  router.route('/profile/questions')
+  router.route('/profile/:u_id/questions')
   .get(function (request, response) { // show all the questions created by the current user
-    var query = {user_id: request.body.id};
+    var query = {user_id: request.params.u_id};
     questionModel.find(query, function (err, questions) {
       if(err) {
         return response.send(err);
@@ -74,12 +74,13 @@ module.exports = function(router, passport) {
   })
 
   .post(function (request, response) { // allow the current user to create a question
-    if(request.body.name && request.body.tag && request.body.answer && request.body.value) {
+    if(request.body.name && request.body.tag && request.body.answer) {
       var query = {
-        user_id: request.user.id,
+        user_id: request.body.user_id,
         tag: parser(request.body.tag),
         name: parser(request.body.name),
-        wrong_answers: [{value: request.body.value}]
+        answer: parser(request.body.answer),
+        wrongOptions: request.body.wrongOptions
       };
 
       questionModel.create(query, function (err, data) {
@@ -95,11 +96,11 @@ module.exports = function(router, passport) {
   });
 
 
-  router.route('/profile/questions/:id')
+  router.route('/profile/:u_id/questions/:id')
   .get(function (request, response) { // find a question with its id for the current user
     if(request.params.id) {
       var query = {
-        user_id: request.user.id,
+        user_id: request.params.u_id,
         _id: request.params.id
       };
 
@@ -119,14 +120,14 @@ module.exports = function(router, passport) {
     if(request.params.id) {
       var query = {
         _id: request.params.id,
-        user_id: request.user.id
+        user_id: request.params.u_id
       };
 
       var updateData = {
         tag: parser(request.body.tag),
         name: request.body.name,
         answer: request.body.answer,
-        wrong_answers: [{value: request.body.value}]
+        wrongOptions: request.body.wrongOptions
       };
 
       questionModel.findOneAndUpdate(query, {$set: updateData}, function (err, data) {
@@ -139,14 +140,14 @@ module.exports = function(router, passport) {
   })
 
   .delete(function (request, response) {
-    if(request.params.id) {
-      var query = {_id: request.params.id, user_id: request.params.user_id};
+    if(request.body.id) {
+      var query = {_id: request.body.id, user_id: request.body.user_id};
 
       questionModel.findOneAndRemove(query, function (err, data) {
         if(err) {
           return response.send(err);
         }
-        return response.json(data + ' document was successfully removed!');
+        return response.json(data);
       });
     }
   });
