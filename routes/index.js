@@ -18,15 +18,9 @@ module.exports = function(router, passport) {
 
 
   router.route('/login')
-  .get(function (request, response) {
-    console.log('Please proceed to the POST at /login');
-    response.send('Please proceed to the POST at /login');
-  })
-
-  .post(passport.authenticate('local-login', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/login', // redirect back to the signup page if there is an error
-  }));
+  .post(passport.authenticate('local-login'), function (request, response) {
+    return response.json(request.user);
+  });
 
 
   router.route('/loggedin')
@@ -40,10 +34,9 @@ module.exports = function(router, passport) {
     response.send('This is the signup page...Please proceed to POST!');
   })
 
-  .post(passport.authenticate('local-signup', {
-    successRedirect : '/profile', // redirect to the secure profile section
-    failureRedirect : '/signup', // redirect back to the signup page if there is an error
-  }));
+  .post(passport.authenticate('local-signup'), function (request, response) {
+    response.json(request.user);
+  });
 
 
   // =====================================
@@ -67,8 +60,8 @@ module.exports = function(router, passport) {
 
 
   router.route('/profile/questions')
-  .get(isLoggedIn, function (request, response) { // show all the questions created by the current user
-    var query = {user_id: request.user.id};
+  .get(function (request, response) { // show all the questions created by the current user
+    var query = {user_id: request.body.id};
     questionModel.find(query, function (err, questions) {
       if(err) {
         return response.send(err);
@@ -80,7 +73,7 @@ module.exports = function(router, passport) {
     });
   })
 
-  .post(isLoggedIn, function (request, response) { // allow the current user to create a question
+  .post(function (request, response) { // allow the current user to create a question
     if(request.body.name && request.body.tag && request.body.answer && request.body.value) {
       var query = {
         user_id: request.user.id,
@@ -103,7 +96,7 @@ module.exports = function(router, passport) {
 
 
   router.route('/profile/questions/:id')
-  .get(isLoggedIn, function (request, response) { // find a question with its id for the current user
+  .get(function (request, response) { // find a question with its id for the current user
     if(request.params.id) {
       var query = {
         user_id: request.user.id,
@@ -122,7 +115,7 @@ module.exports = function(router, passport) {
     }
   })
 
-  .put(isLoggedIn, function (request, response) { // update a question with its id
+  .put(function (request, response) { // update a question with its id
     if(request.params.id) {
       var query = {
         _id: request.params.id,
@@ -145,7 +138,7 @@ module.exports = function(router, passport) {
     }
   })
 
-  .delete(isLoggedIn, function (request, response) {
+  .delete(function (request, response) {
     if(request.params.id) {
       var query = {_id: request.params.id, user_id: request.params.user_id};
 
@@ -165,7 +158,7 @@ module.exports = function(router, passport) {
 
   // list all tags
   router.route('/tags')
-  .get(isLoggedIn, function (request, response) {
+  .get(function (request, response) {
     var query = {};
     questionModel.distinct('tag', 'tag -_id', function (err, tags) {
       if(err) {
@@ -181,7 +174,7 @@ module.exports = function(router, passport) {
 
   // list a single tag and its questions
   router.route('/tags/:tag')
-  .get(isLoggedIn, function (request, response) {
+  .get(function (request, response) {
     if(request.params.tag) {
 
       var query = {tag: parser(request.params.tag)};
@@ -205,7 +198,7 @@ module.exports = function(router, passport) {
 
   // list all questions that have been created
   router.route('/questions')
-  .get(isLoggedIn, function (request, response) {
+  .get(function (request, response) {
     var query = {};
     questionModel.find(query, function (err, questions) {
       if(err) {
@@ -220,7 +213,7 @@ module.exports = function(router, passport) {
 
   //list a single question by its id
   router.route('/questions/:id')
-  .get(isLoggedIn, function (request, response) {
+  .get(function (request, response) {
     if(request.params.id) {
       var query = {_id: request.params.id};
       questionModel.findById(query, function (err, question) {
@@ -246,7 +239,7 @@ module.exports = function(router, passport) {
 
   // list all users
   router.route('/users')
-  .get(isLoggedIn, function (request, response) {
+  .get(function (request, response) {
     userModel.find(function (err, users) {
       if(err) {
         return response.send(err);
@@ -258,7 +251,7 @@ module.exports = function(router, passport) {
 
   // list a single user
   router.route('/users/:id')
-  .get(isLoggedIn, function (request, response) {
+  .get(function (request, response) {
     if(request.params.id) {
       var query = {_id: request.params.id};
       userModel.findById(query, function (err, user) {
@@ -273,7 +266,7 @@ module.exports = function(router, passport) {
 
   // list all the questions from a single user
   router.route('/users/:id/questions')
-  .get(isLoggedIn, function (request, response) {
+  .get(function (request, response) {
     if(request.params.id) {
       var query = {user_id: request.params.id};
       questionModel.find(query, function (err, questions) {
