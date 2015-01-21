@@ -1,2 +1,4 @@
 node_modules
 nodeauth
+dist
+gulpfile.js

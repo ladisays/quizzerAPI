@@ -59,6 +59,42 @@ module.exports = function(router, passport) {
   });
 
 
+  router.route('/profile/:u_id/tags')
+  .get(function (request, response) {
+    var query = {user_id: request.params.u_id};
+    questionModel.distinct('tag', 'tag -_id', function (err, tags) {
+      if(err) {
+        return response.send(err);
+      }
+      if(tags) {
+        return response.json(tags);
+      }
+      return response.status(404).json('No data found!');
+    });
+  });
+
+
+  router.route('/profile/:u_id/tags/:tag')
+  .get(function (request, response) {
+    if(request.params.tag) {
+
+      var query = {
+        user_id: request.params.u_id,
+        tag: parser(request.params.tag)
+      };
+      questionModel.find(query, function (err, tag) {
+        if(err) {
+          return response.send(err);
+        }
+        if(tag) {
+          return response.json(tag);
+        }
+        return response.status(404).json('No data found!');
+      });
+    }
+  });
+
+
   router.route('/profile/:u_id/questions')
   .get(function (request, response) { // show all the questions created by the current user
     var query = {user_id: request.params.u_id};
